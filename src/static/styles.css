@@ -107,6 +107,7 @@ section h3 {
   background-color: var(--surface);
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  animation: slideInLeft 0.6s ease-out;
 }
 
 .sidebar-filters h3 {
@@ -161,12 +162,32 @@ section h3 {
   position: relative;
   overflow: hidden;
   font-size: 0.85rem;
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
 }
 
 .activity-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-  border-color: var(--border-focus);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-light);
+}
+
+/* Staggered animation delays for cards */
+.activity-card:nth-child(1) { animation-delay: 0.05s; }
+.activity-card:nth-child(2) { animation-delay: 0.1s; }
+.activity-card:nth-child(3) { animation-delay: 0.15s; }
+.activity-card:nth-child(4) { animation-delay: 0.2s; }
+.activity-card:nth-child(5) { animation-delay: 0.25s; }
+.activity-card:nth-child(6) { animation-delay: 0.3s; }
+.activity-card:nth-child(7) { animation-delay: 0.35s; }
+.activity-card:nth-child(8) { animation-delay: 0.4s; }
+.activity-card:nth-child(9) { animation-delay: 0.45s; }
+.activity-card:nth-child(10) { animation-delay: 0.5s; }
+.activity-card:nth-child(11) { animation-delay: 0.55s; }
+.activity-card:nth-child(12) { animation-delay: 0.6s; }
+
+.activity-card.celebrate {
+  animation: celebration 0.8s ease-in-out;
 }
 
 .activity-card h4 {
@@ -203,6 +224,66 @@ section h3 {
   border-radius: 10px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+}
+
+/* Social Share Buttons */
+.social-share-container {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+  align-items: center;
+}
+
+.social-share-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.share-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1rem;
+  position: relative;
+}
+
+.share-button:hover {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.share-button:active {
+  transform: translateY(-1px) scale(1.05);
+}
+
+.share-button.facebook {
+  background: #1877f2;
+  color: white;
+}
+
+.share-button.twitter {
+  background: #1da1f2;
+  color: white;
+}
+
+.share-button.linkedin {
+  background: #0a66c2;
+  color: white;
+}
+
+.share-button.email {
+  background: #ea4335;
+  color: white;
 }
 
 /* Capacity Indicator */
@@ -285,6 +366,41 @@ section h3 {
   letter-spacing: 0.3px;
   text-transform: uppercase;
   border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 111, 0, 0.4);
+  animation: pulse 0.6s ease-in-out;
+}
+
+.register-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.register-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.register-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.register-button:active:not(:disabled)::before {
+  width: 300px;
+  height: 300px;
 }
 
 button {
@@ -295,7 +411,17 @@ button {
   font-size: 0.85rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 /* Tooltip styles */
@@ -395,6 +521,114 @@ button {
   }
 }
 
+/* Crazy Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes celebration {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  10% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+  20% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  30% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+  40% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+  }
+  60% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  70% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+  80% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  90% {
+    transform: scale(1.05) rotate(-5deg);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
 /* Modal animation */
 .modal {
   position: fixed;
@@ -409,6 +643,7 @@ button {
   z-index: 1000;
   opacity: 0;
   transition: opacity 0.3s ease;
+  backdrop-filter: blur(3px);
 }
 
 .modal.show {
@@ -426,6 +661,7 @@ button {
   transition: transform 0.3s ease;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--border);
+  animation: bounceIn 0.5s ease-out;
 }
 
 .modal.show .modal-content {
@@ -454,6 +690,15 @@ button {
 /* Hidden class - critical for showing/hiding elements */
 .hidden {
   display: none !important;
+}
+
+/* Message animations */
+.message {
+  animation: slideInLeft 0.4s ease-out;
+}
+
+.message.success {
+  animation: bounceIn 0.5s ease-out;
 }
 
 /* More compact no-results message */
@@ -555,7 +800,7 @@ footer {
   border-radius: 15px;
   font-size: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .category-filter.active,
@@ -564,6 +809,8 @@ footer {
   background-color: var(--primary);
   color: white;
   border-color: var(--primary-dark);
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(26, 35, 126, 0.3);
 }
 
 .category-filter:hover,
@@ -571,6 +818,8 @@ footer {
 .time-filter:hover {
   background-color: var(--primary-light);
   color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .time-filters {

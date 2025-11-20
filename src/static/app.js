@@ -519,6 +519,34 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Create share URL and text
+    const shareUrl = encodeURIComponent(window.location.href);
+    const shareText = encodeURIComponent(`Check out ${name} at Mergington High School! ${details.description}`);
+    const shareSubject = encodeURIComponent(`Activity: ${name}`);
+
+    // Create social share buttons
+    const socialShareHtml = `
+      <div class="social-share-container">
+        <span class="social-share-label">Share:</span>
+        <button class="share-button facebook tooltip" data-activity="${name}" data-platform="facebook" aria-label="Share on Facebook">
+          📘
+          <span class="tooltip-text">Share on Facebook</span>
+        </button>
+        <button class="share-button twitter tooltip" data-activity="${name}" data-platform="twitter" aria-label="Share on Twitter">
+          🐦
+          <span class="tooltip-text">Share on Twitter</span>
+        </button>
+        <button class="share-button linkedin tooltip" data-activity="${name}" data-platform="linkedin" aria-label="Share on LinkedIn">
+          💼
+          <span class="tooltip-text">Share on LinkedIn</span>
+        </button>
+        <button class="share-button email tooltip" data-activity="${name}" data-platform="email" aria-label="Share via Email">
+          ✉️
+          <span class="tooltip-text">Share via Email</span>
+        </button>
+      </div>
+    `;
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -528,6 +556,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
       ${capacityIndicator}
+      ${socialShareHtml}
       <div class="participants-list">
         <h5>Current Participants:</h5>
         <ul>
@@ -575,6 +604,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = activityCard.querySelectorAll(".delete-participant");
     deleteButtons.forEach((button) => {
       button.addEventListener("click", handleUnregister);
+    });
+
+    // Add click handlers for share buttons
+    const shareButtons = activityCard.querySelectorAll(".share-button");
+    shareButtons.forEach((button) => {
+      button.addEventListener("click", handleShare);
     });
 
     // Add click handler for register button (only when authenticated)
@@ -799,6 +834,50 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  // Handle social sharing
+  function handleShare(event) {
+    const button = event.currentTarget;
+    const activity = button.dataset.activity;
+    const platform = button.dataset.platform;
+    
+    // Get activity details
+    const activityDetails = allActivities[activity];
+    if (!activityDetails) return;
+
+    // Create share content
+    const shareUrl = window.location.href;
+    const shareText = `Check out ${activity} at Mergington High School! ${activityDetails.description}`;
+    const shareSubject = `Activity: ${activity}`;
+
+    // Animate button
+    button.style.animation = 'pulse 0.3s ease-in-out';
+    setTimeout(() => {
+      button.style.animation = '';
+    }, 300);
+
+    // Share based on platform
+    let shareLink = '';
+    switch (platform) {
+      case 'facebook':
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'twitter':
+        shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'linkedin':
+        shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'email':
+        shareLink = `mailto:?subject=${encodeURIComponent(shareSubject)}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
+        break;
+    }
+
+    if (shareLink) {
+      window.open(shareLink, '_blank', 'width=600,height=400');
+      showMessage(`Sharing ${activity} on ${platform}!`, 'info');
+    }
+  }
+
   // Show message function
   function showMessage(text, type) {
     messageDiv.textContent = text;
@@ -845,7 +924,21 @@ document.addEventListener("DOMContentLoaded", () => {
         showMessage(result.message, "success");
         closeRegistrationModalHandler();
         // Refresh the activities list after successful signup
-        fetchActivities();
+        await fetchActivities();
+        
+        // Add celebration animation to the registered activity card
+        setTimeout(() => {
+          const activityCards = document.querySelectorAll('.activity-card');
+          activityCards.forEach(card => {
+            const cardTitle = card.querySelector('h4');
+            if (cardTitle && cardTitle.textContent === activity) {
+              card.classList.add('celebrate');
+              setTimeout(() => {
+                card.classList.remove('celebrate');
+              }, 800);
+            }
+          });
+        }, 100);
       } else {
         showMessage(result.detail || "An error occurred", "error");
       }
